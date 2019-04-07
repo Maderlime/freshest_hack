@@ -148,7 +148,7 @@ public class LstActivity extends AppCompatActivity {
     /**
      * helper method to update UI
      * */
-    private void updateUI(){
+    protected static void updateUI(){
         /*create a new class that contains each food and use instead of string*/
         ArrayList<FoodEntry> itemList = new ArrayList();
         //log tasks into database

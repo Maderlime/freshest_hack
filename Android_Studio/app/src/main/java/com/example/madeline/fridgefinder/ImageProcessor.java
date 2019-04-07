@@ -45,4 +45,5 @@ public class ImageProcessor {
     public List<String> getProcessedLines() {
         return processedLines;
     }
+
 }

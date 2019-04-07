@@ -2,7 +2,9 @@ package com.example.madeline.fridgefinder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.madeline.fridgefinder.db.ItemContract;
+import com.example.madeline.fridgefinder.db.ItemDbHelper;
+import com.example.madeline.fridgefinder.helperClasses.FoodEntry;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -115,6 +121,40 @@ public class MainActivity extends AppCompatActivity {
             mine = bitmap;
 
             processor = new ImageProcessor(bitmap);
+
+            //get list entries
+        List<String> entries = processor.getProcessedLines();
+
+        ItemDbHelper mHelper = new ItemDbHelper();
+
+        for (String s: entries){
+            //put list entries into the database
+            String item = s;
+            //get current date
+            String date = FoodEntry.currentDate();
+            //get database
+            SQLiteDatabase db = mHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            //put item into database
+            values.put(ItemContract.ItemEntry.COL_ITEM_TITLE, item);
+            //put date into database
+            values.put(ItemContract.ItemEntry.COL_ITEM_DATE, date);
+
+            db.insertWithOnConflict(ItemContract.ItemEntry.TABLE,
+                    null,
+                    values,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+            db.close();
+
+        }
+        LstActivity.updateUI();
+
+
+
+
+
+
+
     }
 
 
